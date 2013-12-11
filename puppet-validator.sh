@@ -1,3 +1,3 @@
 #!/bin/bash
 
-puppet parser validate $1
+puppet parser validate "$1"
