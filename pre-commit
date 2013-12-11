@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Check the docs for the --diff-filter config:
+#   http://git-scm.com/docs/git-diff.html
+#   ACM = Added, Copied, Modified
+MODIFIED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -e ".*\.pp$")
+MODIFIED_OK=0
+
+for modified_file in $MODIFIED_FILES ; do
+	echo "Validating $modified_file"
+	puppet parser validate "$modified_file" && puppet-lint "$modified_file"
+	if [ $? != 0 ] ; then
+		MODIFIED_OK=1
+	fi
+done
+
+exit $MODIFIED_OK
